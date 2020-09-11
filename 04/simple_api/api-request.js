@@ -30,6 +30,64 @@ app.get('/api/querystu',(req,res)=>{
         res.status(404).send('ไม่พบหน้า API ที่เรียก');
     }
 });
+app.post('/api/addstu',(req,res)=>{
+    const stuId = req.body.id;
+    const stuFname = req.body.fname;
+    const stuLname = req.body.lname;
+    const stuTel = req.body.tel;
+
+    const newStudent = {
+        id: stuId,
+        'fname': stuFname,
+        'lname': stuLname,
+        'tel': stuTel,
+
+    };
+    itStudents.push(newStudent);
+    res.send(itStudents);
+});
+
+app.post('/api/addstudents',(req,res)=>{
+    const stuArr = req.body;
+    stuArr.forEach(element =>{
+        const stuId = element.id;
+        const stuFname = element.fname;
+        const stuLname = element.lname;
+        const stuTel = element.tel;
+
+        const newStudent = {
+            id: stuId,
+            'fname': stuFname,
+            'lname': stuLname,
+            'tel': stuTel,     
+    };
+    itStudents.push(newStudent);
+    });
+    res.send(itStudents);
+});
+
+app.put('/api/editstu/:id',(req,res)=>{
+    const sutId = itStudents.find(element => element.id === parseInt(req.body.id));
+    if(sutId){
+        sutId.frame = req.body.fname;
+        sutId.lname = req.body.lname;
+        sutId.tel = req.body.tel;
+    }else{
+        res.status(404).send('ไม่พบรหัสนักศึกษานี้');
+    }
+    res.send(itStudents);
+});
+
+app.delete('/api/deletestu/:id',(req,res)=>{
+    const stuId = itStudents.find(element => element.id === parseInt(req.params.id));
+    if(stuId){
+        const index =itStudents.indexOf(stuId);
+        itStudents.splice(index,1);
+    }else{
+        res.status(404).send('ไม่พบรหัสนักศึกษานี้');
+    }
+    res.send(itStudents);
+});
 
 app.listen(port,'127.0.0.1',()=>{
     console.log(`Listening to request on port ${port}`);
